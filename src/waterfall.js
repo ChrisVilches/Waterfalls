@@ -35,7 +35,7 @@ function* waterfall(grid) {
 
     if (i == rows - 1) continue;
 
-    let below = grid[i + 1][j];
+    let below = tmp[i + 1][j];
     if (below == WATER) continue;
 
     if (below == EMPTY) {
@@ -48,7 +48,7 @@ function* waterfall(grid) {
         let j2 = j + d;
         if (j2 < 0 || j2 == cols) return;
 
-        if (grid[i][j2] == EMPTY) {
+        if (tmp[i][j2] == EMPTY) {
           grid[i][j2] = WATER;
           tmp[i][j2] = WATER;
           q.enqueue([i, j2, frame + 1]);
@@ -72,9 +72,9 @@ function* waterfall(grid) {
           pos = j;
 
           while (pos < cols && pos >= 0) {
-            if (tmp[i][pos] == STONE) break;
-            if (tmp[i][pos] == WATER) {
-              grid[i][pos] = STONE;
+            if (grid[i][pos] == STONE) break;
+            if (grid[i][pos] == WATER) {
+              tmp[i][pos] = STONE;
             }
             pos += -d;
           }

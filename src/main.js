@@ -4,7 +4,7 @@ const formatGrid = require('./formatGrid');
 const waterfall = require('./waterfall');
 const { sleep } = require('./util');
 
-const grid = readGrid("./src/sample1.txt");
+const grid = readGrid("./src/sample2.txt");
 
 const animation = waterfall(grid, 600);
 
@@ -19,7 +19,7 @@ async function main() {
     let out = `${CLEAR}${gridText}`;
     process.stdout.write(out);
 
-    await sleep(300);
+    await sleep(100);
   } while ((frame = animation.next().value) > -1);
 }
 
