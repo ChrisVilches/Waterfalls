@@ -24,7 +24,7 @@ async function main() {
 }
 
 function exitHandler() {
-  console.clear();
+  //console.clear();
   process.exit();
 }
 
