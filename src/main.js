@@ -2,11 +2,14 @@
 const readGrid = require('./readGrid');
 const formatGrid = require('./formatGrid');
 const waterfall = require('./waterfall');
-const { sleep } = require('./util');
+const { sleep, randomFileNameFromFolder } = require('./util');
 
-const grid = readGrid("./src/sample2.txt");
+const SAMPLES_FOLDER = './samples';
 
-const animation = waterfall(grid, 600);
+const fileName = process.argv[2] ? process.argv[2] : randomFileNameFromFolder(SAMPLES_FOLDER);
+const grid = readGrid(fileName);
+
+const animation = waterfall(grid);
 
 let frame = 0;
 
