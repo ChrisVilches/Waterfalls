@@ -7,21 +7,21 @@ function formatGrid(grid, frame) {
   const rows = grid.length;
   const cols = grid[0].length;
 
-  let result = '';
+  let result = [];
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
       if (grid[i][j] == WATER) {
         let unique = (i + j + frame);
-        result += chalk.blue(WATER_CHARS[unique % WATER_CHARS.length]);
+        result.push(chalk.blue(WATER_CHARS[unique % WATER_CHARS.length]));
       } else {
-        result += grid[i][j];
+        result.push(grid[i][j]);
       }
     }
-    result += '\n';
+    result.push('\n');
   }
 
-  return result;
+  return result.join('');
 }
 
 module.exports = formatGrid;

@@ -25,7 +25,7 @@ function readGrid(fileName) {
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      let c = lines[i].charAt(j);
+      let c = lines[i].charAt(j) || ' ';
       checkChar(c);
       grid[i][j] = c;
     }

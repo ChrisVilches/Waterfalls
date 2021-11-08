@@ -16,9 +16,8 @@ async function main() {
   do {
     let gridText = formatGrid(grid, frame);
 
-    process.stdout.write(CLEAR);
-    process.stdout.write(gridText);
-    process.stdout.write(`Frame: ${frame}`);
+    let out = `${CLEAR}${gridText}`;
+    process.stdout.write(out);
 
     await sleep(300);
   } while ((frame = animation.next().value) > -1);
