@@ -31,7 +31,7 @@ async function main() {
 
     if (DEBUG) {
       out += `BFS Queue: ${animation.queueSize()}\n`;
-      out += `Animation finished: ${animation.isFinished()}`;
+      out += `Animation finished: ${animation.isFinished()}\n`;
     }
 
     process.stdout.write(out);

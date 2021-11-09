@@ -1,4 +1,5 @@
 const Queue = require('queue-fifo');
+const PairSet = require('./PairSet');
 const R = require('ramda');
 const { WATER, STONE, EMPTY } = require('./GridConstants');
 
@@ -83,24 +84,46 @@ class Waterfall {
 
             pos = j;
 
-            const floodCells = new Set();
+            const floodCells = new PairSet();
+
+            let lastStone = null;
 
             while (pos < cols && pos >= 0) {
-              if (grid[i][pos] == STONE) break;
+              if (grid[i][pos] == STONE) {
+                lastStone = pos;
+                break;
+              }
               if (grid[i][pos] == WATER) {
                 tmp[i][pos] = STONE;
-
-                if (prev[i][pos])
-                  floodCells.add(prev[i][pos].join(' '));
+                if (prev[i][pos]) {
+                  floodCells.add(prev[i][pos][0], prev[i][pos][1]);
+                }
               }
               pos += -d;
             }
 
-            for (let [cell] of floodCells.entries()) {
-              let [i3, j3] = cell.split(' ');
-              //prev[+i3][+j3] = prev[i][j];
-              q.enqueue([+i3, +j3, frame + 1]);
+            if (i > 0) {
+              pos = j;
+              let start = pos;
+              while (pos < cols && pos >= 0) {
+
+                if (grid[i - 1][pos] == STONE) {
+                  let new_j = Math.floor((start + pos) / 2);
+
+                  if (grid[i - 1][new_j] == EMPTY) {
+                    floodCells.add(i - 1, new_j);
+                  }
+                  start = pos;
+                }
+
+                if (pos == lastStone) break;
+                pos += -d;
+              }
             }
+
+            floodCells.entries().forEach(([i2, j2]) => {
+              q.enqueue([i2, j2, frame + 1]);
+            });
           }
         });
       }

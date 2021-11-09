@@ -1,10 +1,13 @@
 {
   "name": "waterfalls",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "",
   "scripts": {
     "start": "node src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "directories": {
+    "samples": "./samples"
   },
   "bin": "src/main.js",
   "author": "",
