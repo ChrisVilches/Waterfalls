@@ -65,34 +65,47 @@ class Waterfall {
             tmp[i][j2] = WATER;
             q.enqueue([i, j2, frame + 1]);
             prev[i][j2] = prev[i][j];
-          } else if (grid[i][j2] == STONE) {
+          } else if (grid[i][j2] == STONE || grid[i][j2] == WATER) {
             if (!this.isConcaveFull(i, j)) return;
             if (i == 0) return;
 
             let [start, end] = this.concaveRange(i, j);
 
+            if (this.grid[i][start] != STONE && this.grid[i][end] != STONE) return;
+
             for (let x = start + 1; x <= end; x++) {
-              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] == EMPTY || x == end - 1) {
-                let [start1, end1] = this.concaveRange(i - 1, x - 1);
 
-                start1 = Math.max(start1, start);
-                end1 = Math.min(end1, end);
+              let start1, end1;
 
-                let j3 = Math.floor((start1 + end1) / 2);
-
-                // If the "prev" (the incoming initial water flow) comes from this concave partition,
-                // then enqueue that one. If not, just leave it at the middle of the partition.
-                if (prev[i][j] && start1 <= prev[i][j][1] && prev[i][j][1] <= end1) {
-                  j3 = prev[i][j][1];
-                }
-
-                grid[i - 1][j3] = WATER;
-                tmp[i - 1][j3] = STONE;
-                q.enqueue([i - 1, j3, frame + 1]);
+              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] == EMPTY) {
+                [start1, end1] = this.concaveRange(i - 1, x - 1);
+              } else if (x == end - 1 && this.grid[i - 1][x] != STONE) {
+                [start1, end1] = this.concaveRange(i - 1, x);
+              } else {
+                continue;
               }
+
+              const bothStones = this.grid[i - 1][start1] == STONE && this.grid[i - 1][end1] == STONE;
+              const bothEmpty = this.grid[i - 1][start1] == EMPTY && this.grid[i - 1][end1] == EMPTY;
+              //if (!(bothEmpty || bothStones)) break;
+
+              start1 = Math.max(start1, start);
+              end1 = Math.min(end1, end);
+
+              let j3 = Math.floor((start1 + end1) / 2);
+
+              // If the "prev" (the incoming initial water flow) comes from this concave partition,
+              // then enqueue that one. If not, just leave it at the middle of the partition.
+              if (prev[i][j] && start1 <= prev[i][j][1] && prev[i][j][1] <= end1) {
+                j3 = prev[i][j][1];
+              }
+
+              grid[i - 1][j3] = WATER; // Necessary ?
+              tmp[i - 1][j3] = STONE;
+              q.enqueue([i - 1, j3, frame + 1]);
             }
 
-            for (let x = start + 1; x <= end; x++) {
+            for (let x = start + 1; x < end; x++) {
               tmp[i][x] = STONE;
             }
           }
@@ -118,7 +131,7 @@ class Waterfall {
     let end = this.cols - 1;
 
     if (this.grid[i][j] == STONE) {
-      throw new Error('Concave ranges cannot be computed starting from a stone position.');
+      throw new Error(`Concave ranges cannot be computed starting from a stone position (${i}, ${j}).`);
     }
 
     while (pos < this.cols) {
@@ -156,6 +169,9 @@ class Waterfall {
     for (let x = start + 1; x < end; x++) {
       if (this.grid[i][x] != WATER) return false;
     }
+
+    if (start == 0 && this.grid[i][start] != STONE) return false;
+    if (end == this.cols - 1 && this.grid[i][end] != STONE) return false;
     return true;
   }
 }

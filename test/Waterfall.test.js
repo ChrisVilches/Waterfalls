@@ -1,14 +1,6 @@
-const Waterfall = require('../src/Waterfall');
-const { linesToGrid } = require('../src/readGrid');
 const { expect } = require('chai');
-
-function animate(lines, frames = 1000000000) {
-  let grid = linesToGrid(lines);
-  let w = new Waterfall(grid);
-  w.initialize();
-  while (!w.isFinished() && (frames--) > 0) w.update();
-  return grid;
-}
+const { animate } = require('./util');
+const { linesToGrid } = require('../src/readGrid');
 
 describe('Waterfall', function () {
   context('animates water correctly', function () {
@@ -145,6 +137,119 @@ describe('Waterfall', function () {
         ' #..................#    ',
         '  ###################    ',
         '                         '
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
+
+    it('three partitions', function () {
+      const initial = [
+        '                .                  ',
+        '     #                             ',
+        '     #       #     #             # ',
+        '     #       #     #             # ',
+        '     #       #     #             # ',
+        '     #       #     #             # ',
+        '     #       #     #             # ',
+        '     #                           # ',
+        '################################## '
+      ];
+      let grid1 = animate(initial, 25);
+
+      let grid2 = linesToGrid([
+        '                .                  ',
+        '     #          .                  ',
+        '     #       #  .  #             # ',
+        '     #       #  .  #             # ',
+        '     #       #  .  #             # ',
+        '     #       #  .  #             # ',
+        '     # ....  # ... #     ...     # ',
+        '     #...........................# ',
+        '################################## '
+      ]);
+
+      let grid3 = linesToGrid([
+        '                .                  ',
+        '     #.............................',
+        '     #.......#.....#.............#.',
+        '     #.......#.....#.............#.',
+        '     #.......#.....#.............#.',
+        '     #.......#.....#.............#.',
+        '     #.......#.....#.............#.',
+        '     #...........................#.',
+        '##################################.'
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+      grid1 = animate(initial);
+      expect(grid1).to.deep.eq(grid3);
+    });
+
+    it('concave area is trapped', function () {
+      let grid1 = animate([
+        '   .                  ',
+        ' #   #                ',
+        ' #   #############    ',
+        ' #               #    ',
+        '  ################    ',
+        '                      '
+      ], 17);
+
+      let grid2 = linesToGrid([
+        '   .                  ',
+        ' # . #                ',
+        ' #...#############    ',
+        ' #...............#    ',
+        '  ################    ',
+        '                      '
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
+
+    it('two water sources filling the same concave area (progress)', function () {
+      let grid1 = animate([
+        '       .               .         ',
+        '                                 ',
+        '                                 ',
+        ' #                             # ',
+        ' #                             # ',
+        ' #                             # ',
+        ' ############################### '
+      ], 14);
+
+      let grid2 = linesToGrid([
+        '       .               .         ',
+        '       .               .         ',
+        '       .               .         ',
+        ' #     .               .       # ',
+        ' #    ...             ...      # ',
+        ' #.............................# ',
+        ' ############################### '
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
+
+    it('two water sources filling the same concave area (full)', function () {
+      let grid1 = animate([
+        '       .               .         ',
+        '                                 ',
+        '                                 ',
+        ' #                             # ',
+        ' #                             # ',
+        ' #                             # ',
+        ' ############################### '
+      ]);
+
+      let grid2 = linesToGrid([
+        '       .               .         ',
+        '       .               .         ',
+        '.................................',
+        '.#.............................#.',
+        '.#.............................#.',
+        '.#.............................#.',
+        '.###############################.'
       ]);
 
       expect(grid1).to.deep.eq(grid2);
