@@ -85,13 +85,13 @@ class Waterfall {
 
             const floodCells = new Set();
 
-            let allowFloodUp = true;
-
             while (pos < cols && pos >= 0) {
               if (grid[i][pos] == STONE) break;
               if (grid[i][pos] == WATER) {
                 tmp[i][pos] = STONE;
-                floodCells.add(prev[i][pos].join(' '));
+
+                if (prev[i][pos])
+                  floodCells.add(prev[i][pos].join(' '));
               }
               pos += -d;
             }

@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 
 const readGrid = require('./readGrid');
 const formatGrid = require('./formatGrid');
@@ -18,6 +19,8 @@ const CLEAR = '\33c';
 
 const DEBUG = process.env.NODE_ENV == 'development';
 
+const SLEEP_TIME = 100;
+
 async function main() {
 
   while (true) {
@@ -26,13 +29,14 @@ async function main() {
     let out = `${CLEAR}${gridText}`;
 
     if (DEBUG) {
-      out = `${out}Queue: ${animation.queueSize()}\n`;
+      out += `BFS Queue: ${animation.queueSize()}\n`;
+      out += `Animation finished: ${animation.isFinished()}`;
     }
 
     process.stdout.write(out);
 
     toggleCursor(false);
-    await sleep(100);
+    await sleep(SLEEP_TIME);
 
     if (!animation.isFinished()) animation.update();
   }
