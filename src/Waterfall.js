@@ -1,5 +1,4 @@
 const Queue = require('queue-fifo');
-const PairSet = require('./PairSet');
 const R = require('ramda');
 const { WATER, STONE, EMPTY } = require('./GridConstants');
 
@@ -67,82 +66,35 @@ class Waterfall {
             q.enqueue([i, j2, frame + 1]);
             prev[i][j2] = prev[i][j];
           } else if (grid[i][j2] == STONE) {
-            let concaveFull = true;
+            if (!this.isConcaveFull(i, j)) return;
+            if (i == 0) return;
 
-            let pos = j;
+            let [start, end] = this.concaveRange(i, j);
 
-            while (pos < cols && pos >= 0) {
-              if (grid[i][pos] == STONE) break;
-              if (grid[i][pos] != WATER) {
-                concaveFull = false;
-                break;
-              }
-              pos += -d;
-            }
+            for (let x = start + 1; x <= end; x++) {
+              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] == EMPTY) {
+                let [start1, end1] = this.concaveRange(i - 1, x - 1);
 
-            if (!concaveFull) return;
+                start1 = Math.max(start1, start);
+                end1 = Math.min(end1, end);
 
-            pos = j;
+                let j3 = Math.floor((start1 + end1) / 2);
 
-            const floodCells = new PairSet();
-
-            let lastStone = null;
-
-            while (pos < cols && pos >= 0) {
-              if (grid[i][pos] == STONE) {
-
-                lastStone = pos;
-                break;
-              }
-              if (grid[i][pos] == WATER) {
-                //tmp[i][pos] = STONE;
-                if (prev[i][pos]) {
-                  //floodCells.add(prev[i][pos][0], prev[i][pos][1]);
-                }
-              }
-              pos += -d;
-            }
-
-            if (i > 0) {
-              pos = j;
-              let start = pos;
-
-
-
-              while (pos < cols && pos >= 0) {
-
-                if (grid[i - 1][pos] == STONE || pos == lastStone) {
-                  let new_j = Math.floor((start + pos) / 2);
-
-                  let [start1, pos1] = start < pos ? [start, pos] : [pos, start];
-
-                  // If the "prev" (the incoming initial water flow) comes from this concave partition,
-                  // then enqueue that one. If not, just leave it at the middle of the partition.
-                  if (prev[i][new_j] && new_j >= start1 && new_j <= pos1) {
-                    new_j = prev[i][new_j][1];
-                  }
-
-                  for (let x = start1; x <= pos1; x++) {
-                    tmp[i][x] = STONE;
-                    //grid[i][x] = STONE; //remove
-                  }
-
-                  if (grid[i - 1][new_j] != STONE) {
-                    floodCells.add(i - 1, new_j);
-                  }
-                  start = pos;
+                // If the "prev" (the incoming initial water flow) comes from this concave partition,
+                // then enqueue that one. If not, just leave it at the middle of the partition.
+                if (prev[i][j] && start1 <= prev[i][j][1] && prev[i][j][1] <= end1) {
+                  j3 = prev[i][j][1];
                 }
 
-                if (pos == lastStone) break;
-                pos += -d;
+                grid[i - 1][j3] = WATER;
+                tmp[i - 1][j3] = STONE;
+                q.enqueue([i - 1, j3, frame + 1]);
               }
             }
 
-            floodCells.entries().forEach(([i2, j2]) => {
-              grid[i2][j2] = WATER;
-              tmp[i2][j2] = STONE;
-              q.enqueue([i2, j2, frame + 1]);
-            });
+            for (let x = start + 1; x <= end; x++) {
+              tmp[i][x] = STONE;
+            }
           }
         });
       }
@@ -152,6 +104,59 @@ class Waterfall {
         return;
       }
     }
+  }
+
+  /**
+   * Returns the range from the first stone before the given position, ending in the first stone after the position.
+   * @param {Number} i
+   * @param {Number} j
+   * @returns {Number[]} Start and End position of range, including both stones.
+   */
+  concaveRange(i, j) {
+    let pos = j;
+    let start = 0;
+    let end = this.cols - 1;
+
+    if (this.grid[i][j] == STONE) {
+      throw new Error('Concave ranges cannot be computed starting from a stone position.');
+    }
+
+    while (pos < this.cols) {
+      if (this.grid[i][pos] == STONE) {
+        end = pos;
+        break;
+      }
+      pos++;
+    }
+
+    pos = j;
+    while (pos >= 0) {
+      if (this.grid[i][pos] == STONE) {
+        start = pos;
+        break;
+      }
+      pos--;
+    }
+
+    if (this.grid[i][start] != STONE || this.grid[i][start] != STONE) {
+      throw new Error('Incorrect range. It is not surrounded by stones.');
+    }
+
+    return [start, end];
+  }
+
+  /**
+   * @param {Number} i
+   * @param {Number} j
+   * @returns {boolean} Checks if the concave range the position is in, is full of water.
+   */
+  isConcaveFull(i, j) {
+    let [start, end] = this.concaveRange(i, j);
+
+    for (let x = start + 1; x < end; x++) {
+      if (this.grid[i][x] != WATER) return false;
+    }
+    return true;
   }
 }
 
