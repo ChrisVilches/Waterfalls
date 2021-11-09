@@ -2,7 +2,7 @@
 const readGrid = require('./readGrid');
 const formatGrid = require('./formatGrid');
 const Waterfall = require('./Waterfall');
-const { sleep, randomFileNameFromFolder } = require('./util');
+const { sleep, randomFileNameFromFolder, toggleCursor } = require('./util');
 
 const SAMPLES_FOLDER = './samples';
 
@@ -16,13 +16,22 @@ let frame = 0;
 
 const CLEAR = '\33c';
 
+const DEBUG = process.env.NODE_ENV == 'development';
+
 async function main() {
+
   while (true) {
     let gridText = formatGrid(grid, frame++);
 
     let out = `${CLEAR}${gridText}`;
+
+    if (DEBUG) {
+      out = `${out}Queue: ${animation.queueSize()}\n`;
+    }
+
     process.stdout.write(out);
 
+    toggleCursor(false);
     await sleep(100);
 
     if (!animation.isFinished()) animation.update();
@@ -31,6 +40,7 @@ async function main() {
 
 function exitHandler() {
   //console.clear();
+  toggleCursor(true);
   process.exit();
 }
 

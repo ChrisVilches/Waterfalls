@@ -15,4 +15,10 @@ function randomFileNameFromFolder(folder) {
   return path.join(folder, file);
 }
 
-module.exports = { sleep, randomFileNameFromFolder };
+function toggleCursor(toggle) {
+  const disable = '\x1B[?25l';
+  const enable = '\x1B[?25h';
+  process.stderr.write(toggle ? enable : disable);
+}
+
+module.exports = { sleep, randomFileNameFromFolder, toggleCursor };

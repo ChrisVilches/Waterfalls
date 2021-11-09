@@ -30,6 +30,10 @@ class Waterfall {
     return this.q.isEmpty();
   }
 
+  queueSize() {
+    return this.q.size();
+  }
+
   update() {
     const rows = this.rows;
     const cols = this.cols;
@@ -81,11 +85,12 @@ class Waterfall {
 
             const floodCells = new Set();
 
+            let allowFloodUp = true;
+
             while (pos < cols && pos >= 0) {
               if (grid[i][pos] == STONE) break;
               if (grid[i][pos] == WATER) {
                 tmp[i][pos] = STONE;
-
                 floodCells.add(prev[i][pos].join(' '));
               }
               pos += -d;
@@ -93,6 +98,7 @@ class Waterfall {
 
             for (let [cell] of floodCells.entries()) {
               let [i3, j3] = cell.split(' ');
+              //prev[+i3][+j3] = prev[i][j];
               q.enqueue([+i3, +j3, frame + 1]);
             }
           }
