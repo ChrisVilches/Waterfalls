@@ -90,13 +90,14 @@ class Waterfall {
 
             while (pos < cols && pos >= 0) {
               if (grid[i][pos] == STONE) {
+
                 lastStone = pos;
                 break;
               }
               if (grid[i][pos] == WATER) {
-                tmp[i][pos] = STONE;
+                //tmp[i][pos] = STONE;
                 if (prev[i][pos]) {
-                  floodCells.add(prev[i][pos][0], prev[i][pos][1]);
+                  //floodCells.add(prev[i][pos][0], prev[i][pos][1]);
                 }
               }
               pos += -d;
@@ -105,12 +106,28 @@ class Waterfall {
             if (i > 0) {
               pos = j;
               let start = pos;
+
+
+
               while (pos < cols && pos >= 0) {
 
-                if (grid[i - 1][pos] == STONE) {
+                if (grid[i - 1][pos] == STONE || pos == lastStone) {
                   let new_j = Math.floor((start + pos) / 2);
 
-                  if (grid[i - 1][new_j] == EMPTY) {
+                  let [start1, pos1] = start < pos ? [start, pos] : [pos, start];
+
+                  // If the "prev" (the incoming initial water flow) comes from this concave partition,
+                  // then enqueue that one. If not, just leave it at the middle of the partition.
+                  if (prev[i][new_j] && new_j >= start1 && new_j <= pos1) {
+                    new_j = prev[i][new_j][1];
+                  }
+
+                  for (let x = start1; x <= pos1; x++) {
+                    tmp[i][x] = STONE;
+                    //grid[i][x] = STONE; //remove
+                  }
+
+                  if (grid[i - 1][new_j] != STONE) {
                     floodCells.add(i - 1, new_j);
                   }
                   start = pos;
@@ -122,6 +139,8 @@ class Waterfall {
             }
 
             floodCells.entries().forEach(([i2, j2]) => {
+              grid[i2][j2] = WATER;
+              tmp[i2][j2] = STONE;
               q.enqueue([i2, j2, frame + 1]);
             });
           }
