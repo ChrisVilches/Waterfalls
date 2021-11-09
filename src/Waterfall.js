@@ -72,7 +72,7 @@ class Waterfall {
             let [start, end] = this.concaveRange(i, j);
 
             for (let x = start + 1; x <= end; x++) {
-              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] == EMPTY) {
+              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] == EMPTY || x == end - 1) {
                 let [start1, end1] = this.concaveRange(i - 1, x - 1);
 
                 start1 = Math.max(start1, start);
@@ -139,7 +139,7 @@ class Waterfall {
     }
 
     if (this.grid[i][start] != STONE || this.grid[i][start] != STONE) {
-      throw new Error('Incorrect range. It is not surrounded by stones.');
+      //throw new Error('Incorrect range. It is not surrounded by stones.');
     }
 
     return [start, end];

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const readGrid = require('./readGrid');
+const { readGrid } = require('./readGrid');
 const formatGrid = require('./formatGrid');
 const Waterfall = require('./Waterfall');
 const path = require('path');

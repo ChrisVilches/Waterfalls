@@ -6,11 +6,7 @@ function checkChar(c) {
     throw new Error(`Invalid file. Character '${c}' cannot be present.`);
 }
 
-function readGrid(fileName) {
-  const buffer = fs.readFileSync(fileName);
-  const fileContent = buffer.toString();
-  const lines = fileContent.split('\n');
-
+function linesToGrid(lines) {
   const rows = lines.length;
   let cols = 0;
   let grid = [];
@@ -33,4 +29,11 @@ function readGrid(fileName) {
   return grid;
 }
 
-module.exports = readGrid;
+function readGrid(fileName) {
+  const buffer = fs.readFileSync(fileName);
+  const fileContent = buffer.toString();
+  const lines = fileContent.split('\n');
+  return linesToGrid(lines);
+}
+
+module.exports = { linesToGrid, readGrid };
