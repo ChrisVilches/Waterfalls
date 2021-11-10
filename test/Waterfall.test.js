@@ -1,6 +1,8 @@
 const { expect } = require('chai');
-const { animate, printGrid } = require('./util');
+const { animate } = require('./util');
 const { linesToGrid } = require('../src/readGrid');
+
+// TODO: Move these test cases to separate files (and then import the data to the testing framework).
 
 describe('Waterfall', function () {
   context('animates water correctly', function () {
