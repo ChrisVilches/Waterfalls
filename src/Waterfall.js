@@ -91,7 +91,7 @@ class Waterfall {
               let found = false;
               for (let y = start1; y <= end1; y++) {
                 if (grid[i - 1][y] == WATER) {
-                  grid[i - 1][y] = WATER; // Necessary ?
+                  //grid[i - 1][y] = WATER; // Necessary ?
                   tmp[i - 1][y] = STONE;
                   q.enqueue([i - 1, y, frame + 1]);
                   found = true;

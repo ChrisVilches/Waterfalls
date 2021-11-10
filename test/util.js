@@ -9,4 +9,10 @@ function animate(lines, frames = 1000000000) {
   return grid;
 }
 
-module.exports = { animate };
+function printGrid(grid) {
+  for (let i = 0; i < grid.length; i++) {
+    console.log(grid[i].join(''));
+  }
+}
+
+module.exports = { animate, printGrid };

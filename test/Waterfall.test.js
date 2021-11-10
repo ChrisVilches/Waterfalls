@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const { animate } = require('./util');
+const { animate, printGrid } = require('./util');
 const { linesToGrid } = require('../src/readGrid');
 
 describe('Waterfall', function () {
@@ -250,6 +250,54 @@ describe('Waterfall', function () {
         '.#.............................#.',
         '.#.............................#.',
         '.###############################.'
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
+
+    it('two water sources filling the same concave area (progress, different vertical position)', function () {
+      let grid1 = animate([
+        '       .                         ',
+        '                                 ',
+        '                       .         ',
+        ' #                             # ',
+        ' #                             # ',
+        ' #                             # ',
+        ' ############################### '
+      ], 21);
+
+      let grid2 = linesToGrid([
+        '       .                         ',
+        '       .                         ',
+        '       .               .         ',
+        ' #    ...             ...      # ',
+        ' #.............................# ',
+        ' #.............................# ',
+        ' ############################### '
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
+
+    it('two water sources filling the same concave area (progress, one inside concave area)', function () {
+      let grid1 = animate([
+        '       .                         ',
+        '                                 ',
+        '                                 ',
+        ' #                             # ',
+        ' #                     .       # ',
+        ' #                             # ',
+        ' ############################### '
+      ], 27);
+
+      let grid2 = linesToGrid([
+        '       .                         ',
+        '       .                         ',
+        '       .                         ',
+        ' #...............              # ',
+        ' #.............................# ',
+        ' #.............................# ',
+        ' ############################### '
       ]);
 
       expect(grid1).to.deep.eq(grid2);
