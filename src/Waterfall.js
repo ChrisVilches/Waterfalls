@@ -91,8 +91,6 @@ class Waterfall {
                   // Removing this line results in adding many repeated/useless elements to the queue.
                   if (grid[i - 1][y - 1] == WATER && grid[i - 1][y + 1] == WATER) continue;
 
-                  //grid[i - 1][y] = WATER; // Necessary ?
-                  //tmp[i - 1][y] = STONE;
                   q.enqueue([i - 1, y, frame + 1]);
                   found = true;
                 }
@@ -105,6 +103,16 @@ class Waterfall {
               tmp[i - 1][j3] = STONE;
               q.enqueue([i - 1, j3, frame + 1]);
             }
+
+            let hole = false;
+            for (let x = start + 1; x < end; x++) {
+              if (tmp[i + 1][x] != STONE) {
+                hole = true;
+                break;
+              }
+            }
+
+            if (hole) return;
 
             for (let x = start + 1; x < end; x++) {
               tmp[i][x] = STONE;

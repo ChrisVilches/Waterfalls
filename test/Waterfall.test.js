@@ -338,5 +338,25 @@ describe('Waterfall', function () {
 
       expect(grid1).to.deep.eq(grid2);
     });
+
+    it('concave but has a hole at the bottom', function () {
+      let grid1 = animate([
+        '   .              .     ',
+        ' #                      ',
+        ' ###               #    ',
+        '    ##            #     ',
+        '      ###### ######     ',
+      ]);
+
+      let grid2 = linesToGrid([
+        '   .              .     ',
+        ' #...             .     ',
+        ' ###...          ..#    ',
+        '    ##............#     ',
+        '      ######.######     ',
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
   });
 });

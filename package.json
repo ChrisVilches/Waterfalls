@@ -7,7 +7,8 @@
     "test": "mocha"
   },
   "directories": {
-    "samples": "./samples"
+    "samples": "./samples",
+    "default_grids": "./default_grids"
   },
   "bin": "src/main.js",
   "author": "",

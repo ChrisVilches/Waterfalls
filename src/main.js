@@ -6,7 +6,7 @@ const Waterfall = require('./Waterfall');
 const path = require('path');
 const { sleep, randomFileNameFromFolder, toggleCursor } = require('./util');
 
-const SAMPLES_FOLDER = path.join(__dirname, '..', 'samples');
+const SAMPLES_FOLDER = path.join(__dirname, '..', 'default_grids');
 
 const fileName = process.argv[2] ? process.argv[2] : randomFileNameFromFolder(SAMPLES_FOLDER);
 const grid = readGrid(fileName);
