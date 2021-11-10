@@ -62,11 +62,14 @@ class Waterfall {
             if (!this.isConcaveFull(i, j)) return;
             if (i == 0) return;
 
+            // This algorithm can possibly be simplified by just looking above and re-adding the water ones (after making the current
+            // concave row converted into stones)? I don't know though.
+
             let [start, end] = this.concaveRange(i, j);
 
-            if (this.grid[i][start] != STONE && this.grid[i][end] != STONE) return;
+            if (this.grid[i][start] != STONE && this.grid[i][end] != STONE) return; // Probably not necessary.
 
-            for (let x = start + 1; x <= end; x++) {
+            for (let x = start + 1; x < end; x++) {
 
               let start1, end1;
 
