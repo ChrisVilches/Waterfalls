@@ -302,5 +302,39 @@ describe('Waterfall', function () {
 
       expect(grid1).to.deep.eq(grid2);
     });
+
+    it('concave with a narrow entrance (and larger bottom)', function () {
+      let grid1 = animate([
+        '          .         ',
+        '                    ',
+        '        #    #      ',
+        '      ##      ##    ',
+        '     #          #   ',
+        '    #            #  ',
+        '    #            #  ',
+        '     #          #   ',
+        '      ##      ##    ',
+        '        ##  ##      ',
+        '          ##        ',
+        '                    '
+      ]);
+
+      let grid2 = linesToGrid([
+        '          .         ',
+        '       ........     ',
+        '     ...#....#...   ',
+        '    ..##......##..  ',
+        '   ..#..........#.. ',
+        '   .#............#. ',
+        '   .#............#. ',
+        '   . #..........# . ',
+        '   .  ##......##  . ',
+        '   .    ##..##    . ',
+        '   .      ##      . ',
+        '   .              . '
+      ]);
+
+      expect(grid1).to.deep.eq(grid2);
+    });
   });
 });

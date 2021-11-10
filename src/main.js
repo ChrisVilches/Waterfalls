@@ -22,6 +22,8 @@ const DEBUG = process.env.NODE_ENV == 'development';
 
 const SLEEP_TIME = 100;
 
+let highestQueueSize = 0;
+
 async function main() {
 
   while (true) {
@@ -30,8 +32,9 @@ async function main() {
     let out = `${CLEAR}${gridText}`;
 
     if (DEBUG) {
-      out += `BFS Queue: ${animation.queueSize()}\n`;
+      out += `BFS Queue: ${animation.queueSize()} (highest: ${highestQueueSize})\n`;
       out += `Animation finished: ${animation.isFinished()}\n`;
+      highestQueueSize = Math.max(animation.queueSize(), highestQueueSize);
     }
 
     process.stdout.write(out);

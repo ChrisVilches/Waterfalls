@@ -73,7 +73,7 @@ class Waterfall {
 
               let start1, end1;
 
-              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] != STONE) {
+              if (x > start + 1 && this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] != STONE) {
                 [start1, end1] = this.concaveRange(i - 1, x - 1);
               } else if (x == end - 1 && this.grid[i - 1][x] != STONE) {
                 [start1, end1] = this.concaveRange(i - 1, x);
@@ -85,10 +85,14 @@ class Waterfall {
               end1 = Math.min(end1, end);
 
               let found = false;
-              for (let y = start1; y <= end1; y++) {
+              for (let y = start1 + 1; y < end1; y++) {
                 if (grid[i - 1][y] == WATER) {
-                  grid[i - 1][y] = WATER; // Necessary ?
-                  tmp[i - 1][y] = STONE;
+                  // In Javascript going out of bounds returns undefined, so this is safe.
+                  // Removing this line results in adding many repeated/useless elements to the queue.
+                  if (grid[i - 1][y - 1] == WATER && grid[i - 1][y + 1] == WATER) continue;
+
+                  //grid[i - 1][y] = WATER; // Necessary ?
+                  //tmp[i - 1][y] = STONE;
                   q.enqueue([i - 1, y, frame + 1]);
                   found = true;
                 }
