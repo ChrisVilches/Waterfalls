@@ -88,14 +88,19 @@ class Waterfall {
               start1 = Math.max(start1, start);
               end1 = Math.min(end1, end);
 
-              let j3 = Math.floor((start1 + end1) / 2);
-
-              // If the "prev" (the incoming initial water flow) comes from this concave partition,
-              // then enqueue that one. If not, just leave it at the middle of the partition.
-              if (prev[i][j] && start1 <= prev[i][j][1] && prev[i][j][1] <= end1) {
-                j3 = prev[i][j][1];
+              let found = false;
+              for (let y = start1; y <= end1; y++) {
+                if (grid[i - 1][y] == WATER) {
+                  grid[i - 1][y] = WATER; // Necessary ?
+                  tmp[i - 1][y] = STONE;
+                  q.enqueue([i - 1, y, frame + 1]);
+                  found = true;
+                }
               }
 
+              if (found) continue;
+
+              let j3 = Math.floor((start1 + end1) / 2);
               grid[i - 1][j3] = WATER; // Necessary ?
               tmp[i - 1][j3] = STONE;
               q.enqueue([i - 1, j3, frame + 1]);
