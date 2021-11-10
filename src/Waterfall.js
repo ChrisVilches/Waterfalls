@@ -10,11 +10,7 @@ class Waterfall {
   initialize() {
     this.rows = this.grid.length;
     this.cols = this.grid[0].length;
-
-    this.prev = [];
     this.tmp = R.clone(this.grid);
-    for (let i = 0; i < this.rows; i++)
-      this.prev.push([R.repeat([-1, -1], this.cols)]);
 
     this.q = new Queue();
 
@@ -39,7 +35,6 @@ class Waterfall {
     const cols = this.cols;
     const grid = this.grid;
     const tmp = this.tmp;
-    const prev = this.prev;
     const q = this.q;
 
     while (!q.isEmpty()) {
@@ -54,7 +49,6 @@ class Waterfall {
         grid[i + 1][j] = WATER;
         tmp[i + 1][j] = WATER;
         q.enqueue([i + 1, j, frame + 1]);
-        prev[i + 1][j] = [i, j];
       } else {
         [-1, 1].forEach(d => {
           let j2 = j + d;
@@ -64,7 +58,6 @@ class Waterfall {
             grid[i][j2] = WATER;
             tmp[i][j2] = WATER;
             q.enqueue([i, j2, frame + 1]);
-            prev[i][j2] = prev[i][j];
           } else if (grid[i][j2] == STONE || grid[i][j2] == WATER) {
             if (!this.isConcaveFull(i, j)) return;
             if (i == 0) return;
@@ -91,7 +84,7 @@ class Waterfall {
               let found = false;
               for (let y = start1; y <= end1; y++) {
                 if (grid[i - 1][y] == WATER) {
-                  //grid[i - 1][y] = WATER; // Necessary ?
+                  grid[i - 1][y] = WATER; // Necessary ?
                   tmp[i - 1][y] = STONE;
                   q.enqueue([i - 1, y, frame + 1]);
                   found = true;
