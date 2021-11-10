@@ -77,17 +77,13 @@ class Waterfall {
 
               let start1, end1;
 
-              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] == EMPTY) {
+              if (this.grid[i - 1][x] == STONE && this.grid[i - 1][x - 1] != STONE) {
                 [start1, end1] = this.concaveRange(i - 1, x - 1);
               } else if (x == end - 1 && this.grid[i - 1][x] != STONE) {
                 [start1, end1] = this.concaveRange(i - 1, x);
               } else {
                 continue;
               }
-
-              const bothStones = this.grid[i - 1][start1] == STONE && this.grid[i - 1][end1] == STONE;
-              const bothEmpty = this.grid[i - 1][start1] == EMPTY && this.grid[i - 1][end1] == EMPTY;
-              //if (!(bothEmpty || bothStones)) break;
 
               start1 = Math.max(start1, start);
               end1 = Math.min(end1, end);
