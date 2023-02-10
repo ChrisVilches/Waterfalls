@@ -4,6 +4,8 @@ Terminal based waterfall/rain simulator.
 
 Based on the Multi-Source BFS algorithm.
 
+Animated example:
+
 ![](demo.gif)
 
 Execute using (without installing):
